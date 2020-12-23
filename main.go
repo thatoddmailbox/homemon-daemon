@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -18,7 +20,25 @@ func report() error {
 	}
 	tokenString := strings.TrimSpace(string(tokenBytes))
 
-	req, err := http.NewRequest("POST", reportURL+"?p=1&b=50&v=4000", nil)
+	batteryCapacity, err := getBatteryCapacity()
+	if err != nil {
+		log.Println("Error getting battery capacity!")
+		log.Println(err)
+	}
+
+	batteryVoltage, err := getBatteryVoltage()
+	if err != nil {
+		log.Println("Error getting battery voltage!")
+		log.Println(err)
+	}
+
+	params := url.Values{
+		"p": []string{"1"},
+		"b": []string{strconv.Itoa(batteryCapacity)},
+		"v": []string{strconv.Itoa(batteryVoltage)},
+	}
+
+	req, err := http.NewRequest("POST", reportURL+"?"+params.Encode(), nil)
 	if err != nil {
 		return err
 	}
