@@ -6,16 +6,9 @@ import (
 	"strings"
 )
 
-const baseURL = "https://homemon-rpt.studer.dev/"
-const reportURL = baseURL + "report"
+var host string
 
-func report(t transport) error {
-	tokenBytes, err := ioutil.ReadFile("token.txt")
-	if err != nil {
-		return err
-	}
-	tokenString := strings.TrimSpace(string(tokenBytes))
-
+func report(token []byte, t transport) error {
 	usbPresent, err := getUSBPresent()
 	powered := usbStatusNotPresent
 	if err != nil {
@@ -38,13 +31,25 @@ func report(t transport) error {
 		log.Println(err)
 	}
 
-	return t.Transport([]byte(tokenString), powered, batteryCapacity, batteryVoltage)
+	return t.Transport(token, powered, batteryCapacity, batteryVoltage)
 }
 
 func main() {
 	log.Println("homemon-daemon")
 
-	err := report(&transportHTTP{})
+	tokenBytes, err := ioutil.ReadFile("token.txt")
+	if err != nil {
+		panic(err)
+	}
+	tokenBytes = []byte(strings.TrimSpace(string(tokenBytes)))
+
+	hostBytes, err := ioutil.ReadFile("host.txt")
+	if err != nil {
+		panic(err)
+	}
+	host = strings.TrimSpace(string(hostBytes))
+
+	err = report(tokenBytes, &transportHTTP{})
 	if err != nil {
 		panic(err)
 	}
