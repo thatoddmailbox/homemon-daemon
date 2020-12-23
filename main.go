@@ -1,12 +1,8 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
-	"strings"
 )
-
-var host string
 
 func report(token []byte, t transport) error {
 	usbPresent, err := getUSBPresent()
@@ -37,19 +33,12 @@ func report(token []byte, t transport) error {
 func main() {
 	log.Println("homemon-daemon")
 
-	tokenBytes, err := ioutil.ReadFile("token.txt")
+	err := loadConfig()
 	if err != nil {
 		panic(err)
 	}
-	tokenBytes = []byte(strings.TrimSpace(string(tokenBytes)))
 
-	hostBytes, err := ioutil.ReadFile("host.txt")
-	if err != nil {
-		panic(err)
-	}
-	host = strings.TrimSpace(string(hostBytes))
-
-	err = report(tokenBytes, &transportHTTP{})
+	err = report([]byte(currentConfig.Token), &transportHTTP{})
 	if err != nil {
 		panic(err)
 	}

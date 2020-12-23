@@ -23,7 +23,7 @@ func (t *transportHTTP) Transport(token []byte, powered usbStatus, batteryCapaci
 		"v": []string{strconv.Itoa(int(batteryVoltage))},
 	}
 
-	req, err := http.NewRequest("POST", "https://"+host+"/report?"+params.Encode(), nil)
+	req, err := http.NewRequest("POST", "https://"+currentConfig.Host+"/report?"+params.Encode(), nil)
 	if err != nil {
 		return err
 	}
