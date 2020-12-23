@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -10,11 +11,16 @@ const baseURL = "https://homemon-rpt.studer.dev/"
 const reportURL = baseURL + "report"
 
 func report() error {
+	tokenBytes, err := ioutil.ReadFile("token.txt")
+	if err != nil {
+		return err
+	}
+
 	req, err := http.NewRequest("POST", reportURL+"?p=1&b=50&v=4000", nil)
 	if err != nil {
 		return err
 	}
-	req.Header.Set("X-Token", "changeme")
+	req.Header.Set("X-Token", string(tokenBytes))
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
