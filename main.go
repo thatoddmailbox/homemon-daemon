@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 const baseURL = "https://homemon-rpt.studer.dev/"
@@ -15,12 +16,13 @@ func report() error {
 	if err != nil {
 		return err
 	}
+	tokenString := strings.TrimSpace(string(tokenBytes))
 
 	req, err := http.NewRequest("POST", reportURL+"?p=1&b=50&v=4000", nil)
 	if err != nil {
 		return err
 	}
-	req.Header.Set("X-Token", string(tokenBytes))
+	req.Header.Set("X-Token", tokenString)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
