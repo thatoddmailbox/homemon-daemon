@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -34,4 +35,19 @@ func getBatteryVoltage() (int, error) {
 		v = v / 1000
 	}
 	return v, err
+}
+
+func getUSBPresent() (bool, error) {
+	p, err := readPowerSupplyFile("usb/present")
+	if err != nil {
+		if os.IsNotExist(err) {
+			// that's ok, that probably just means there's no usb host
+			// (aka, we're not connected to power)
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return p == 1, nil
 }

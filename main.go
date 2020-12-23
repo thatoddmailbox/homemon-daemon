@@ -20,6 +20,16 @@ func report() error {
 	}
 	tokenString := strings.TrimSpace(string(tokenBytes))
 
+	usbPresent, err := getUSBPresent()
+	usbPresentString := "0"
+	if err != nil {
+		log.Println("Error getting USB status!")
+		log.Println(err)
+		usbPresentString = "-1"
+	} else if usbPresent {
+		usbPresentString = "1"
+	}
+
 	batteryCapacity, err := getBatteryCapacity()
 	if err != nil {
 		log.Println("Error getting battery capacity!")
@@ -33,7 +43,7 @@ func report() error {
 	}
 
 	params := url.Values{
-		"p": []string{"1"},
+		"p": []string{usbPresentString},
 		"b": []string{strconv.Itoa(batteryCapacity)},
 		"v": []string{strconv.Itoa(batteryVoltage)},
 	}
