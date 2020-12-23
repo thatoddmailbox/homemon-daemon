@@ -1,0 +1,34 @@
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+)
+
+const baseURL = "https://homemon-rpt.studer.dev/"
+const reportURL = baseURL + "report"
+
+func report() error {
+	res, err := http.Post(reportURL+"?p=1&b=50&v=4000", "", nil)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	responseData := map[string]interface{}{}
+	err = json.NewDecoder(res.Body).Decode(&responseData)
+	if err != nil {
+		return err
+	}
+	log.Println(responseData)
+	return nil
+}
+
+func main() {
+	log.Println("homemon-daemon")
+
+	err := report()
+	if err != nil {
+		panic(err)
+	}
+}
