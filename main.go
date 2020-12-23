@@ -10,7 +10,12 @@ const baseURL = "https://homemon-rpt.studer.dev/"
 const reportURL = baseURL + "report"
 
 func report() error {
-	res, err := http.Post(reportURL+"?p=1&b=50&v=4000", "", nil)
+	req, err := http.NewRequest("POST", reportURL+"?p=1&b=50&v=4000", nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("X-Token", "changeme")
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}
