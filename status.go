@@ -9,6 +9,14 @@ import (
 
 const powerSupplyFolder = "/sys/class/power_supply/"
 
+type usbStatus int8
+
+const (
+	usbStatusNotPresent usbStatus = iota
+	usbStatusPresent
+	usbStatusError
+)
+
 func readPowerSupplyFile(filename string) (int, error) {
 	data, err := ioutil.ReadFile(powerSupplyFolder + filename)
 	if err != nil {
@@ -25,16 +33,17 @@ func readPowerSupplyFile(filename string) (int, error) {
 	return dataInt, nil
 }
 
-func getBatteryCapacity() (int, error) {
-	return readPowerSupplyFile("battery/capacity")
+func getBatteryCapacity() (uint8, error) {
+	c, err := readPowerSupplyFile("battery/capacity")
+	return uint8(c), err
 }
 
-func getBatteryVoltage() (int, error) {
+func getBatteryVoltage() (uint16, error) {
 	v, err := readPowerSupplyFile("battery/voltage_now")
 	if v != -1 {
 		v = v / 1000
 	}
-	return v, err
+	return uint16(v), err
 }
 
 func getUSBPresent() (bool, error) {
