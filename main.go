@@ -38,7 +38,16 @@ func main() {
 		panic(err)
 	}
 
-	err = report([]byte(currentConfig.Token), &transportHTTP{})
+	var t transport
+	if currentConfig.Transport == "HTTP" {
+		t = &transportHTTP{}
+	} else if currentConfig.Transport == "UDP" {
+		t = &transportUDP{}
+	} else {
+		log.Fatalf("Unknown transport '%s'.", currentConfig.Transport)
+	}
+
+	err = report([]byte(currentConfig.Token), t)
 	if err != nil {
 		panic(err)
 	}
