@@ -23,6 +23,9 @@ type config struct {
 	// Interval sets the amount of time to wait between reports.
 	Interval duration
 
+	// InitialDelay sets the amount of time to wait before the first report.
+	InitialDelay duration
+
 	// Host sets the host to submit reports to.
 	Host string
 

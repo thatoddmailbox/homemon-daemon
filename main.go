@@ -49,6 +49,10 @@ func main() {
 		log.Fatalf("Unknown transport '%s'.", currentConfig.Transport)
 	}
 
+	if currentConfig.InitialDelay.Duration > 0 {
+		time.Sleep(currentConfig.InitialDelay.Duration)
+	}
+
 	for {
 		err = report([]byte(currentConfig.Token), t)
 		if err != nil {
