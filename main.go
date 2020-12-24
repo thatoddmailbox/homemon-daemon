@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"runtime"
+	"time"
 )
 
 func report(token []byte, t transport) error {
@@ -47,8 +49,15 @@ func main() {
 		log.Fatalf("Unknown transport '%s'.", currentConfig.Transport)
 	}
 
-	err = report([]byte(currentConfig.Token), t)
-	if err != nil {
-		panic(err)
+	for {
+		err = report([]byte(currentConfig.Token), t)
+		if err != nil {
+			panic(err)
+		}
+
+		lastTime := time.Now()
+		runtime.GC()
+		sleepTime := currentConfig.Interval.Duration - (time.Now().Sub(lastTime))
+		time.Sleep(sleepTime)
 	}
 }
