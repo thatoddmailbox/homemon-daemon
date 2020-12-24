@@ -26,6 +26,9 @@ type config struct {
 	// Host sets the host to submit reports to.
 	Host string
 
+	// Port sets the port on the Host to submit reports to. (for UDP only!)
+	Port int
+
 	// Token sets the token used to authenticate reports.
 	Token      string
 	tokenBytes []byte

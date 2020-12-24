@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-const port = 9325
-
 const batteryCapacityError = 0x7F
 const batteryVoltageError = 0x1FFF
 
@@ -26,7 +24,7 @@ func (t *transportUDP) calculateHMAC(message []byte) ([]byte, error) {
 }
 
 func (t *transportUDP) Transport(token []byte, powered usbStatus, batteryCapacity uint8, batteryVoltage uint16) error {
-	udpHost, err := net.ResolveUDPAddr("udp", currentConfig.Host+":"+strconv.Itoa(port))
+	udpHost, err := net.ResolveUDPAddr("udp", currentConfig.Host+":"+strconv.Itoa(currentConfig.Port))
 	if err != nil {
 		return err
 	}
