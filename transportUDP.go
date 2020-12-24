@@ -3,12 +3,16 @@ package main
 import (
 	"crypto/hmac"
 	"crypto/sha256"
-	"log"
+	"encoding/binary"
 	"net"
 	"strconv"
+	"time"
 )
 
 const port = 9325
+
+const batteryCapacityError = 0x7F
+const batteryVoltageError = 0x1FFF
 
 type transportUDP struct{}
 
@@ -22,13 +26,42 @@ func (t *transportUDP) calculateHMAC(message []byte) ([]byte, error) {
 }
 
 func (t *transportUDP) Transport(token []byte, powered usbStatus, batteryCapacity uint8, batteryVoltage uint16) error {
-	log.Println(currentConfig.Host + ":" + strconv.Itoa(port))
 	udpHost, err := net.ResolveUDPAddr("udp", currentConfig.Host+":"+strconv.Itoa(port))
 	if err != nil {
 		return err
 	}
 
-	message := []byte("dab dab dab")
+	// 1 byte for battery capacity and power state
+	// 2 bytes for battery voltage and power state error flag
+	// 8 bytes for timestamp
+	const messageLength = 1 + 2 + 8
+	message := make([]byte, messageLength)
+
+	// first byte:
+	// * first bit indicates if usb power is present
+	// * remaining bit indicate battery %
+	message[0] = batteryCapacity
+	if powered == usbStatusPresent {
+		message[0] = message[0] | 0x80
+	} else {
+		message[0] = message[0] & 0x7F
+	}
+
+	// second and third bytes (big endian):
+	// * first bit indicates if there was an error reading the usb power state
+	// * second and third bits are reserved for future use
+	// * remaining bits indicate battery voltage
+	binary.BigEndian.PutUint16(message[1:], batteryVoltage)
+	if powered == usbStatusError {
+		message[1] = message[1] | 0x80
+	} else {
+		message[1] = message[1] & 0x7F
+	}
+
+	// fourth through thirteenth bytes (big endian): local timestamp
+	// (to protect against replay attacks)
+	binary.BigEndian.PutUint64(message[3:], uint64(time.Now().Unix()))
+
 	mac, err := t.calculateHMAC(message)
 	if err != nil {
 		return err
