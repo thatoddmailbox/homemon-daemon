@@ -4,13 +4,24 @@ import (
 	"encoding/base64"
 	"log"
 	"os"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
 
+type duration struct {
+	time.Duration
+}
+
+func (d *duration) UnmarshalText(text []byte) error {
+	var err error
+	d.Duration, err = time.ParseDuration(string(text))
+	return err
+}
+
 type config struct {
-	// Interval sets the amount of time, in seconds, to wait between reports.
-	Interval int
+	// Interval sets the amount of time to wait between reports.
+	Interval duration
 
 	// Host sets the host to submit reports to.
 	Host string
