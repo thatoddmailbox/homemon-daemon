@@ -56,7 +56,8 @@ func main() {
 	for {
 		err = report([]byte(currentConfig.Token), t)
 		if err != nil {
-			panic(err)
+			log.Println("Error while sending report!")
+			log.Println(err)
 		}
 
 		lastTime := time.Now()
