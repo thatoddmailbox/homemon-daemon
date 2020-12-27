@@ -26,3 +26,5 @@ Transport = "HTTP"
 * Port - the port on the host to send reports to (only applies to UDP transport)
 * Token - the token to use for authencation, must match the token in homemon-server or homemon-receiver
 * Transport - the transport to use (either HTTP or UDP)
+
+Durations (like Interval and InitialDelay) must be in a format supported by Go's [time.ParseDuration](https://golang.org/pkg/time/#ParseDuration).
