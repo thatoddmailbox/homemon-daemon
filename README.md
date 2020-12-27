@@ -10,7 +10,7 @@ To build the code and run it on a connected MW41:
 
 ## Configuration
 Create a `config.toml` file, in the same directory you run the daemon from. This file should look something like:
-```
+```toml
 Interval = "10m"
 InitialDelay = "1m"
 Host = "1.2.3.4"
