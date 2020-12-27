@@ -11,8 +11,8 @@ To build the code and run it on a connected MW41:
 ## Configuration
 Create a `config.toml` file, in the same directory you run the daemon from. This file should look something like:
 ```
-Interval = "10s"
-InitialDelay = "5s"
+Interval = "10m"
+InitialDelay = "1m"
 Host = "1.2.3.4"
 Port = 7890
 Token = "token goes here"
@@ -21,8 +21,8 @@ Transport = "HTTP"
 
 ### Options
 * Interval - the time to wait between reports
-* InitialDelay - the time to wait before sending the first report
-* Host - the host to send reports to
+* InitialDelay - the time to wait before sending the first report (this is useful if you want to wait for, say, the network to come up after your device has restarted)
+* Host - the host to send reports to (if using the UDP transport, it's recommended to make this an IP address so you don't have to do a DNS lookup, but a hostname will work)
 * Port - the port on the host to send reports to (only applies to UDP transport)
 * Token - the token to use for authencation, must match the token in homemon-server or homemon-receiver
 * Transport - the transport to use (either HTTP or UDP)
