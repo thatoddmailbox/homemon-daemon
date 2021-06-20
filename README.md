@@ -13,6 +13,7 @@ Create a `config.toml` file, in the same directory you run the daemon from. This
 ```toml
 Interval = "10m"
 InitialDelay = "1m"
+RestartCount = 144
 Host = "1.2.3.4"
 Port = 7890
 Token = "token goes here"
