@@ -70,7 +70,11 @@ func main() {
 		if currentConfig.RestartCount != 0 {
 			count++
 			if count == currentConfig.RestartCount {
-				exec.Command("reboot").Run()
+				err := exec.Command("reboot").Run()
+				if err != nil {
+					log.Println("Error while rebooting!")
+					log.Println(err)
+				}
 			}
 		}
 	}
