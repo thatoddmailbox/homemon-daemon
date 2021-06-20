@@ -26,6 +26,9 @@ type config struct {
 	// InitialDelay sets the amount of time to wait before the first report.
 	InitialDelay duration
 
+	// RestartCount sets how frequently the device should be rebooted.
+	RestartCount int
+
 	// Host sets the host to submit reports to.
 	Host string
 

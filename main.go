@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os/exec"
 	"runtime"
 	"time"
 )
@@ -53,6 +54,7 @@ func main() {
 		time.Sleep(currentConfig.InitialDelay.Duration)
 	}
 
+	count := 0
 	for {
 		err = report([]byte(currentConfig.Token), t)
 		if err != nil {
@@ -64,5 +66,12 @@ func main() {
 		runtime.GC()
 		sleepTime := currentConfig.Interval.Duration - (time.Now().Sub(lastTime))
 		time.Sleep(sleepTime)
+
+		if currentConfig.RestartCount != 0 {
+			count++
+			if count == currentConfig.RestartCount {
+				exec.Command("reboot").Run()
+			}
+		}
 	}
 }
