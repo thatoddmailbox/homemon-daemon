@@ -64,7 +64,7 @@ func main() {
 
 		lastTime := time.Now()
 		runtime.GC()
-		sleepTime := currentConfig.Interval.Duration - time.Now().Sub(lastTime)
+		sleepTime := currentConfig.Interval.Duration - time.Since(lastTime)
 		time.Sleep(sleepTime)
 
 		if currentConfig.RestartCount != 0 {
