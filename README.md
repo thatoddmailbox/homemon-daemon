@@ -1,5 +1,5 @@
 # homemon-daemon
-This program runs on a device and sends reports to a copy of [homemon-server](https://github.com/thatoddmailbox/homemon-server) or [homemon-receiver](https://github.com/thatoddmailbox/homemon-receiver).
+This program runs on a device and sends regular status reports to a copy of [homemon-server](https://github.com/thatoddmailbox/homemon-server) or [homemon-receiver](https://github.com/thatoddmailbox/homemon-receiver).
 
 ## Development
 To build the code and run it on a connected MW41:
